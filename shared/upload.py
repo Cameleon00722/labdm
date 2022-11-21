@@ -13,6 +13,17 @@ class Cartes:
         # Valeur des cartes
         self.carte_valeur = carte_valeur
 
+class Joueur:
+    def __init__(self, name):
+
+        self.mainJ = []
+
+        self.name = name
+
+    def setMainJ(self, lst_main):
+
+        self.mainJ = lst_main
+
 
 # Affiché la carte
 def print_cartes(cartes, dissimuler):
