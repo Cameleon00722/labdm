@@ -78,7 +78,7 @@ async def joueur_request(reader, writer):
                     i.setTemps(i.getTemps() - 1)
                 for z in i.lst_table:
                     print(z)
-                    
+
 
     while True:
         data = await reader.readline()
@@ -89,7 +89,7 @@ async def joueur_request(reader, writer):
         message = data.decode().strip()
 
         if message == "quit":
-            message = f"User {addr} quit the chat."
+            message = f"User {addr} leave the server."
             print(message)
             await forward(writer, "Server", message)
             users.remove(writer)
@@ -98,6 +98,12 @@ async def joueur_request(reader, writer):
 
         if message == "MORE 1":
             message = f"utilisateur {addr} prend une carte."
+            print(message)
+            await forward(writer, "Server", message)
+            #code à implémenté
+
+        if message == "MORE 0":
+            message = f"utilisateur {addr} ne prend pas de carte."
             print(message)
             await forward(writer, "Server", message)
             #code à implémenté
@@ -112,7 +118,7 @@ async def server():
     serverJR = await asyncio.start_server(joueur_request, '0.0.0.0', 667)
 
     async with serverCR:
-        await serverCR.serve_forever()  # handle requests for ever
+        await serverCR.serve_forever()
     async with serverJR:
         await serverJR.serve_forever()
 
