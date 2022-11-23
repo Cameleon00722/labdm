@@ -13,15 +13,22 @@ class Cartes:
         # Valeur des cartes
         self.carte_valeur = carte_valeur
 
+
 class Joueur:
     def __init__(self, name):
-
         self.mainJ = []
 
         self.name = name
 
-    def setMainJ(self, lst_main):
+        self.score = 0
 
+    def getMainJ(self):
+        return self.mainJ
+
+    def getScore(self):
+        return self.score
+
+    def setMainJ(self, lst_main):
         self.mainJ = lst_main
 
 
@@ -137,11 +144,14 @@ def print_cartes(cartes, dissimuler):
 # Game blackjack
 def blackjack(deck):
     # Cartes du joueur et dealeur
-    joueur_cartes = []
+
+    joueur = Joueur("test")
+
+    joueur_cartes = joueur.getMainJ()
     dealer_cards = []
 
     # Score du joueur et dealer
-    joueur_score = 0
+    joueur_score = joueur.getScore()
     dealer_score = 0
 
     while len(joueur_cartes) < 2:
