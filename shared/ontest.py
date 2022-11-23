@@ -64,20 +64,19 @@ async def croupier_request(reader, writer):
 
 
 async def joueur_request(reader, writer):
+    joueur = str(writer.get_extra_info('peername')[0])
     mess = "Bienvenue\n"
     writer.write(mess.encode())
     data = await reader.read(256)
     nomTab = data.decode().strip('NAME ')
     for i in tableaudetable:
         if i.nom == nomTab and i.getTemps() > 0:
-            i.ajouter_table(writer)
-            if i.getTable()[0] == writer:
+            i.ajouter_table(joueur)
+            if i.getTable()[0] == joueur :
                 while i.getTemps() != 0:
                     print(i.getTemps())
                     await asyncio.sleep(1)
                     i.setTemps(i.getTemps() - 1)
-                for z in i.lst_table:
-                    print(z)
 
 
     while True:
