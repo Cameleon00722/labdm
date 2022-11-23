@@ -401,6 +401,32 @@ async def joueur_request(reader, writer):
             mess2 = ".\n"
             writer.write(mess2.encode())
 
+
+    suites = ["♠", "♥", "♣", "♦"]
+
+    # Valeur des suites
+    suites_valeur = {"♠": "\u2664", "♥": "\u2661", "♣": "\u2667", "♦": "\u2662"}
+
+    # Types de cartes
+    cartes = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+
+    # Valeur des cartes
+    cartes_valeurs = {"A": 11, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "J": 10,
+                      "Q": 10, "K": 10}
+
+    # Le deck des cartes
+    deck = []
+
+    # Boucle pour tout type de suites
+    for suite in suites:
+
+        # Boucle pour tous les types de cartes dans une suite
+        for carte in cartes:
+            # Ajouter la carte au deck
+            deck.append(Cartes(suites_valeur[suite], carte, cartes_valeurs[carte]))
+
+    blackjack(deck)
+    
     while True:
         data = await reader.read(256)
         message = data.decode()
