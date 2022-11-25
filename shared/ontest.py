@@ -81,7 +81,7 @@ async def croupier_request(reader, writer):
     for i in tableaudetable:
         i.affiche()
 
-def gen_carte2(numero_carte, point, n_as, reader, writer):
+async def gen_carte2(numero_carte, point, n_as, reader, writer):
     if numero_carte == 1:
         s = "2\n"
         writer.write(s.encode())
@@ -143,7 +143,7 @@ def gen_carte2(numero_carte, point, n_as, reader, writer):
     return point
 
 
-def gen_carte(carte_off, point, n_as, reader, writer):
+async def gen_carte(carte_off, point, n_as, reader, writer):
     type_carte = random.randint(1, 4)
     numero_carte = random.randint(1, 13)
 
@@ -153,28 +153,28 @@ def gen_carte(carte_off, point, n_as, reader, writer):
 
 
     if type_carte == 1:
-        s = "Coeur"
+        s = "Coeur "
         writer.write(s.encode())
 
         a = gen_carte2(numero_carte, point, n_as, reader, writer)
         carte_off.append(str(type_carte) + str(numero_carte))
 
     elif type_carte == 2:
-        s = "Carreau"
+        s = "Carreau "
         writer.write(s.encode())
 
         a = gen_carte2(numero_carte, point, n_as, reader, writer)
         carte_off.append(str(type_carte) + str(numero_carte))
 
     elif type_carte == 3:
-        s = "Pique"
+        s = "Pique "
         writer.write(s.encode())
 
         a = gen_carte2(numero_carte, point, n_as, reader, writer)
         carte_off.append(str(type_carte) + str(numero_carte))
 
     elif type_carte == 4:
-        s = "Trèfle"
+        s = "Trèfle "
         writer.write(s.encode())
 
         a = gen_carte2(numero_carte, point, n_as, reader, writer)
@@ -183,7 +183,7 @@ def gen_carte(carte_off, point, n_as, reader, writer):
     return a
 
 
-def croupier(carte_off, n_as):
+def croupier(carte_off, n_as, reader, writer):
     pts_Croupier = 0
 
     while pts_Croupier < 17:
@@ -291,7 +291,7 @@ async def joueur_request(reader, writer):
             mess = f"utilisateur {joueur} ne prend pas de carte."
             print(mess)
 
-            val = croupier(carte_off, Nombre_As)
+            val = croupier(carte_off, Nombre_As, reader, writer)
 
             s = "Votre somme total : " + str(JBlack.getScore()) + "\n"
             writer.write(s.encode())
@@ -303,9 +303,12 @@ async def joueur_request(reader, writer):
             if val > JBlack.getScore() and val <= 21:
                 s = "le croupier gagne\n"
                 writer.write(s.encode())
+                partie = leave(joueur,writer,indextable)
+
             else:
                 s = "le joueur gagne\n"
                 writer.write(s.encode())
+                partie = leave(joueur,writer,indextable)
 
 
         #await forward(writer, addr, message)
