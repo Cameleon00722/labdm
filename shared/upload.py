@@ -17,6 +17,9 @@ class Joueur:
     def getScore(self):
         return self.score
 
+    def setScore(self, add):
+        self.score = add
+
     def setMainJ(self, lst_main):
         self.mainJ = lst_main
 
@@ -116,25 +119,29 @@ def croupier(carte_off, n_as):
 
 
 def blackjack(carte_off):
-    Point_Joueur = 0
+
+    JBlack = Joueur("test")
+
     jouer = 1
     Nombre_As = 0
 
     while jouer == 1:
         jouer = int(input("1 pour prendre 0 pour passer : "))
+        print(JBlack.getScore())
 
         if jouer == 1:
-            a = gen_carte(carte_off, Point_Joueur, Nombre_As)
-            Point_Joueur = + a
+            a = gen_carte(carte_off, JBlack.getScore(), Nombre_As)
+            JBlack.setScore(a)
+            print(JBlack.getScore(), a)
 
-            if Point_Joueur > 21:
+            if JBlack.getScore() > 21:
                 print("OUUUT")
-                print("votre somme total : ", Point_Joueur)
+                print("votre somme total : ", JBlack.getScore())
                 break
 
-            if Point_Joueur == 21:
+            if JBlack.getScore() == 21:
                 print("blakjack win")
-                print("votre somme total : ", Point_Joueur)
+                print("votre somme total : ", JBlack.getScore())
                 break
 
 
@@ -142,11 +149,11 @@ def blackjack(carte_off):
 
             val = croupier(carte_off, Nombre_As)
 
-            print("votre somme total : ", Point_Joueur)
+            print("votre somme total : ", JBlack.getScore())
 
             print("le croupier à ", val)
 
-            if val > Point_Joueur and val <= 21:
+            if val > JBlack.getScore() and val <= 21:
                 print("le croupier gagne")
             else:
                 print("le joueur gagne")
@@ -158,4 +165,3 @@ def blackjack(carte_off):
 
 while True:
     blackjack(carte_off)
-
