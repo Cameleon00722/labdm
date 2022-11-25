@@ -282,10 +282,11 @@ async def joueur_request(reader, writer):
                 writer.write(s.encode())
                 s = "votre somme total : " + str(JBlack.getScore()) + "\n"
                 writer.write(s.encode())
-                break
+                partie = leave(joueur,writer,indextable)
             print("fin de more 1 ")
             mess2 = ".\n"
             writer.write(mess2.encode())
+            
         if message == "MORE 0":
             mess = f"utilisateur {joueur} ne prend pas de carte."
             print(mess)
