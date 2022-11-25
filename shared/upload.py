@@ -2,6 +2,37 @@ import random
 
 carte_off = []
 
+class table:
+    def __init__(self, nom, temps):
+        # nom de la table
+        self.nom = nom
+
+        # liste des tables existantes
+        self.lst_table = []
+
+        # timer
+        self.temps = temps
+
+        self.carte_off = []
+
+    def getTable(self):
+        return self.lst_table
+
+    def getTemps(self):
+        return self.temps
+
+    def getNom(self):
+        return self.nom
+
+    def setTemps(self, var):
+        self.temps = var
+
+    def ajouter_table(self, add_table):
+        self.lst_table.append(add_table)
+
+    def affiche(self):
+        print("Nom de la table =", self.nom, "liste des joueurs =", self.lst_table, "temps =", self.temps)
+
 
 class Joueur:
     def __init__(self, name):
