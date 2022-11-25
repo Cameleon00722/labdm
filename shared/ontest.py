@@ -153,28 +153,28 @@ def gen_carte(carte_off, point, n_as, reader, writer):
 
 
     if type_carte == 1:
-        s = "Coeur\n"
+        s = "Coeur"
         writer.write(s.encode())
 
         a = gen_carte2(numero_carte, point, n_as, reader, writer)
         carte_off.append(str(type_carte) + str(numero_carte))
 
     elif type_carte == 2:
-        s = "Carreau\n"
+        s = "Carreau"
         writer.write(s.encode())
 
         a = gen_carte2(numero_carte, point, n_as, reader, writer)
         carte_off.append(str(type_carte) + str(numero_carte))
 
     elif type_carte == 3:
-        s = "Pique\n"
+        s = "Pique"
         writer.write(s.encode())
 
         a = gen_carte2(numero_carte, point, n_as, reader, writer)
         carte_off.append(str(type_carte) + str(numero_carte))
 
     elif type_carte == 4:
-        s = "Trèfle\n"
+        s = "Trèfle"
         writer.write(s.encode())
 
         a = gen_carte2(numero_carte, point, n_as, reader, writer)
@@ -193,6 +193,16 @@ def croupier(carte_off, n_as):
     return pts_Croupier
 
 
+def leave (joueur,writer,i) :
+    message = "END"
+    mess = f"User {joueur} leave the server2."
+    print(mess)
+    for z in tableaudetable[i].lst_table :
+        if z == joueur :
+            tableaudetable[i].lst_table.remove(joueur)
+    writer.write(message.encode())
+    writer.close()
+    return False
 
 
 
@@ -248,14 +258,7 @@ async def joueur_request(reader, writer):
         message = data.decode().strip()
 
         if message == "END":
-            mess = f"User {joueur} leave the server2."
-            print(mess)
-            for z in tableaudetable[indextable].lst_table :
-                if z == joueur :
-                    tableaudetable[indextable].lst_table.remove(joueur)
-            writer.write(message.encode())
-            writer.close()
-            break
+            partie = leave(joueur,writer,indextable)
 
         if message == "MORE 1":
             mess = f"utilisateur {joueur} prend une carte."
@@ -263,7 +266,7 @@ async def joueur_request(reader, writer):
 
             a = gen_carte(carte_off, JBlack.getScore(), Nombre_As, reader, writer)
             JBlack.setScore(a)
-            s = str(JBlack.getScore())
+            s = "score : " + str(JBlack.getScore())+"\n"
             writer.write(s.encode())
 
             if JBlack.getScore() > 21:
@@ -271,9 +274,8 @@ async def joueur_request(reader, writer):
                 writer.write(s.encode())
                 s = "votre somme total : " + str(JBlack.getScore()) + "\n"
                 writer.write(s.encode())
-                s = "Coeur\n"
-                writer.write(s.encode())
-                break
+                partie = leave(joueur,writer,indextable)
+
 
             if JBlack.getScore() == 21:
                 s = "blakjack win\n"
@@ -281,7 +283,9 @@ async def joueur_request(reader, writer):
                 s = "votre somme total : " + str(JBlack.getScore()) + "\n"
                 writer.write(s.encode())
                 break
-
+            print("fin de more 1 ")
+            mess2 = ".\n"
+            writer.write(mess2.encode())
         if message == "MORE 0":
             mess = f"utilisateur {joueur} ne prend pas de carte."
             print(mess)
@@ -302,7 +306,7 @@ async def joueur_request(reader, writer):
                 s = "le joueur gagne\n"
                 writer.write(s.encode())
 
-        print(message)
+
         #await forward(writer, addr, message)
 
 
