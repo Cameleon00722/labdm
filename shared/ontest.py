@@ -193,56 +193,6 @@ def croupier(carte_off, n_as):
     return pts_Croupier
 
 
-def blackjack(carte_off, reader, writer):
-
-    JBlack = Joueur("test")
-
-    jouer = 1
-    Nombre_As = 0
-
-    while jouer == 1:
-        jouer = int(input("1 pour prendre 0 pour passer : "))
-
-        if jouer == 1:
-            a = gen_carte(carte_off, JBlack.getScore(), Nombre_As, reader, writer)
-            JBlack.setScore(a)
-            s = str(JBlack.getScore())
-            writer.write(s.encode())
-
-            if JBlack.getScore() > 21:
-                s = "OOUUUT"
-                writer.write(s.encode())
-                s = "votre somme total : " + str(JBlack.getScore())
-                s = "Coeur"
-                writer.write(s.encode())
-                break
-
-            if JBlack.getScore() == 21:
-                s = "blakjack win"
-                writer.write(s.encode())
-                s = "votre somme total : " + str(JBlack.getScore())
-                writer.write(s.encode())
-                break
-
-
-        elif jouer == 0:
-
-            val = croupier(carte_off, Nombre_As)
-
-            s = "Votre somme total : " + str(JBlack.getScore())
-            writer.write(s.encode())
-
-
-            s = "le croupier à " + str(val)
-            writer.write(s.encode())
-
-            if val > JBlack.getScore() and val <= 21:
-                s = "le croupier gagne"
-                writer.write(s.encode())
-            else:
-                s = "le joueur gagne"
-                writer.write(s.encode())
-
 
 
 
@@ -282,11 +232,14 @@ async def joueur_request(reader, writer):
         writer.write(test.encode())
         writer.close()
 
+#################### black jack ###########################""
+    carte_off = []
+    JBlack = Joueur(joueur)
+
+    jouer = 1
+    Nombre_As = 0
 
     while partie:
-
-        carte_off = []
-        blackjack(carte_off, reader, writer)
 
         data = await reader.read(256)
         if reader.at_eof() :
@@ -307,14 +260,46 @@ async def joueur_request(reader, writer):
         if message == "MORE 1":
             mess = f"utilisateur {joueur} prend une carte."
             print(mess)
-            #await forward(writer, "Server", message)
-            #code à implémenté
+
+            a = gen_carte(carte_off, JBlack.getScore(), Nombre_As, reader, writer)
+            JBlack.setScore(a)
+            s = str(JBlack.getScore())
+            writer.write(s.encode())
+
+            if JBlack.getScore() > 21:
+                s = "OOUUUT"
+                writer.write(s.encode())
+                s = "votre somme total : " + str(JBlack.getScore())
+                s = "Coeur"
+                writer.write(s.encode())
+                break
+
+            if JBlack.getScore() == 21:
+                s = "blakjack win"
+                writer.write(s.encode())
+                s = "votre somme total : " + str(JBlack.getScore())
+                writer.write(s.encode())
+                break
 
         if message == "MORE 0":
             mess = f"utilisateur {joueur} ne prend pas de carte."
             print(mess)
-            #await forward(writer, "Server", message)
-            #code à implémenté
+
+            val = croupier(carte_off, Nombre_As)
+
+            s = "Votre somme total : " + str(JBlack.getScore())
+            writer.write(s.encode())
+
+
+            s = "le croupier à " + str(val)
+            writer.write(s.encode())
+
+            if val > JBlack.getScore() and val <= 21:
+                s = "le croupier gagne"
+                writer.write(s.encode())
+            else:
+                s = "le joueur gagne"
+                writer.write(s.encode())
 
         print(message)
         #await forward(writer, addr, message)
