@@ -1,5 +1,34 @@
 import random
 
+class Cartes:
+    def __init__(self, suite, valeur, carte_valeur):
+        # Suite des carte tel que coeur pique ...
+        self.suite = suite
+
+        # Représentation des cartes Roi, As ...
+        self.valeur = valeur
+
+        # Valeur des cartes
+        self.carte_valeur = carte_valeur
+
+
+class Joueur:
+    def __init__(self, name):
+        self.mainJ = []
+
+        self.name = name
+
+        self.score = 0
+
+    def getMainJ(self):
+        return self.mainJ
+
+    def getScore(self):
+        return self.score
+
+    def setMainJ(self, lst_main):
+        self.mainJ = lst_main
+
 carte_off = []
 
 
