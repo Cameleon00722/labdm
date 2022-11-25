@@ -187,7 +187,7 @@ def croupier(carte_off, n_as):
     pts_Croupier = 0
 
     while pts_Croupier < 17:
-        GainPts = gen_carte(carte_off, pts_Croupier, n_as)
+        GainPts = gen_carte(carte_off, pts_Croupier, n_as, reader, writer)
         pts_Croupier = + GainPts
 
     return pts_Croupier
@@ -286,7 +286,7 @@ async def joueur_request(reader, writer):
             print("fin de more 1 ")
             mess2 = ".\n"
             writer.write(mess2.encode())
-            
+
         if message == "MORE 0":
             mess = f"utilisateur {joueur} ne prend pas de carte."
             print(mess)
