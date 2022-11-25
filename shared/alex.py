@@ -3,7 +3,7 @@ import random
 carte_off = []
 
 
-def gen_carte2(numero_carte, point):
+def gen_carte2(numero_carte, point, n_as):
     if numero_carte == 1:
         print("2")
         point += 2
@@ -42,52 +42,56 @@ def gen_carte2(numero_carte, point):
         point += 10
     if numero_carte == 13:
         print("as")
-        point += 11
+        n_as += 1
+        if point >= 11:
+            point += 1
+        else:
+            point += 11
 
     return point
 
 
-def gen_carte(carte_off, point):
+def gen_carte(carte_off, point, n_as):
     type_carte = random.randint(1, 4)
     numero_carte = random.randint(1, 13)
 
     while str(type_carte) + str(numero_carte) in carte_off:
-        print("déjà pris : " + str(type_carte) + str(numero_carte))
+        #print("déjà pris : " + str(type_carte) + str(numero_carte))
         type_carte = random.randint(1, 4)
         numero_carte = random.randint(1, 13)
 
     if type_carte == 1:
-        print("coeur")
+        print("♥ ", end='')
 
-        a = gen_carte2(numero_carte, point)
+        a = gen_carte2(numero_carte, point, n_as)
         carte_off.append(str(type_carte) + str(numero_carte))
 
     elif type_carte == 2:
-        print("carro")
+        print("♦ ", end='')
 
-        a = gen_carte2(numero_carte, point)
+        a = gen_carte2(numero_carte, point, n_as)
         carte_off.append(str(type_carte) + str(numero_carte))
 
     elif type_carte == 3:
-        print("pique")
+        print("♠ ", end='')
 
-        a = gen_carte2(numero_carte, point)
+        a = gen_carte2(numero_carte, point, n_as)
         carte_off.append(str(type_carte) + str(numero_carte))
 
     elif type_carte == 4:
-        print("trèfle")
+        print("♣ ", end='')
 
-        a = gen_carte2(numero_carte, point)
+        a = gen_carte2(numero_carte, point, n_as)
         carte_off.append(str(type_carte) + str(numero_carte))
 
     return a
 
 
-def croupier(carte_off):
+def croupier(carte_off, n_as):
     pts = 0
 
     while pts < 17:
-        b = gen_carte(carte_off, pts)
+        b = gen_carte(carte_off, pts, n_as)
         pts = + b
 
     return pts
@@ -96,12 +100,13 @@ def croupier(carte_off):
 def blackjack(carte_off):
     point = 0
     jouer = 1
+    n_as = 0
 
     while jouer == 1:
         jouer = int(input("1 pour prendre 0 pour passer : "))
 
         if jouer == 1:
-            a = gen_carte(carte_off, point)
+            a = gen_carte(carte_off, point, n_as)
             point = + a
 
             if point > 21:
@@ -117,7 +122,7 @@ def blackjack(carte_off):
 
         elif jouer == 0:
 
-            val = croupier(carte_off)
+            val = croupier(carte_off, n_as)
 
             print("votre somme total : ", point)
 
@@ -132,5 +137,5 @@ def blackjack(carte_off):
             print("erreur")
             jouer = 1
 
-
-blackjack(carte_off)
+while True:
+    blackjack(carte_off)
