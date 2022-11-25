@@ -100,7 +100,7 @@ def blackjack(deck, reader, writer):
 
         Cj2 = "SCORE JOUEUR = " + str(joueur_score) + " \n"
         writer.write(Cj2.encode())
-        #print("SCORE JOUEUR = ", joueur_score)
+
 
         dealer_card = random.choice(deck)
         dealer_cards.append(dealer_card)
@@ -111,11 +111,9 @@ def blackjack(deck, reader, writer):
 
         print("CARTES CROUPIER: ")
         if len(dealer_cards) == 1:
-            #print_cartes(dealer_cards, False, reader, writer)
             s = "CROUPIER SCORE = " + str(dealer_score) + "\n "
             writer.write(s.encode())
         else:
-            #print_cartes(dealer_cards[:-1], True, reader, writer)
             s = "CROUPIER SCORE = " + str(dealer_score - dealer_cards[-1].carte_valeur) + "\n "
             writer.write(s.encode())
 
@@ -134,7 +132,6 @@ def blackjack(deck, reader, writer):
     s = "CARTES CROUPIER: \n"
     writer.write(s.encode())
 
-    #print_cartes(dealer_cards[:-1], True, reader, writer)
 
     s = "CROUPIER SCORE = " + str( dealer_score - dealer_cards[-1].carte_valeur) + "\n "
     writer.write(s.encode())
@@ -143,7 +140,7 @@ def blackjack(deck, reader, writer):
 
     s = "CARTES JOUEUR: \n"
     writer.write(s.encode())
-    #print_cartes(joueur_cartes, False, reader, writer)
+
     s = "SCORE JOUEUR = " + str(joueur_score) + " \n"
     writer.write(s.encode())
 
@@ -170,7 +167,6 @@ def blackjack(deck, reader, writer):
         # Print joueur et dealer cartes
         s = "CARTES CROUPIER: \n"
         writer.write(s.encode())
-            #print_cartes(dealer_cards[:-1], True, reader, writer)
         s = "CROUPIER SCORE = "+ str(dealer_score - dealer_cards[-1].carte_valeur) +"\n"
         writer.write(s.encode())
 
@@ -180,7 +176,6 @@ def blackjack(deck, reader, writer):
 
         s = "CARTES JOUEUR: \n"
         writer.write(s.encode())
-            #print_cartes(joueur_cartes, False, reader, writer)
         s = "SCORE JOUEUR = "+ str(joueur_score) + "\n"
         writer.write(s.encode())
 
@@ -189,7 +184,6 @@ def blackjack(deck, reader, writer):
     # Print joueur et delaer cartes
     s = "CARTES JOUEUR: \n"
     writer.write(s.encode())
-    #print_cartes(joueur_cartes, False, reader, writer)
     s = "SCORE JOUEUR = " + str(joueur_score) + "\n"
     writer.write(s.encode())
 
@@ -200,7 +194,6 @@ def blackjack(deck, reader, writer):
     writer.write(s.encode())
 
     s = "CARTES CROUPIER: \n"
-    #print_cartes(dealer_cards, False, reader, writer)
     s = "CROUPIER SCORE = "+ str(dealer_score)+ "\n"
     writer.write(s.encode())
 
@@ -238,7 +231,7 @@ def blackjack(deck, reader, writer):
 
         # print joueur et dealer cartes
         s = "CARTES JOUEUR: \n"
-        #print_cartes(joueur_cartes, False, reader, writer)
+
         s = "SCORE JOUEUR = "+ str(joueur_score) + "\n"
         writer.write(s.encode())
 
@@ -247,7 +240,7 @@ def blackjack(deck, reader, writer):
 
         s = "CARTES CROUPIER: \n"
         writer.write(s.encode())
-        #print_cartes(dealer_cards, False, reader, writer)
+
         s = "CROUPIER SCORE = " + str(dealer_score) + "\n"
         writer.write(s.encode())
         print("CROUPIER SCORE = ", dealer_score)
@@ -303,10 +296,6 @@ async def croupier_request(reader, writer):
         i.affiche()
 
 
-# while (temps[len(temps)-1]!=0) :
-#	await asyncio.sleep(1)
-#	temps[len(temps)-1]=temps[len(temps)-1]-1
-# print("done")
 
 
 async def joueur_request(reader, writer):
