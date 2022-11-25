@@ -83,55 +83,55 @@ async def croupier_request(reader, writer):
 
 def gen_carte2(numero_carte, point, n_as, reader, writer):
     if numero_carte == 1:
-        s = "2"
+        s = "2\n"
         writer.write(s.encode())
         point += 2
     if numero_carte == 2:
-        s = "3"
+        s = "3\n"
         writer.write(s.encode())
         point += 3
     if numero_carte == 3:
-        s = "4"
+        s = "4\n"
         writer.write(s.encode())
         point += 4
     if numero_carte == 4:
-        s = "5"
+        s = "5\n"
         writer.write(s.encode())
         point += 5
     if numero_carte == 5:
-        s = "6"
+        s = "6\n"
         writer.write(s.encode())
         point += 6
     if numero_carte == 6:
-        s = "7"
+        s = "7\n"
         writer.write(s.encode())
         point += 7
     if numero_carte == 7:
-        s = "8"
+        s = "8\n"
         writer.write(s.encode())
         point += 8
     if numero_carte == 8:
-        s = "9"
+        s = "9\n"
         writer.write(s.encode())
         point += 9
     if numero_carte == 9:
-        s = "10"
+        s = "10\n"
         writer.write(s.encode())
         point += 10
     if numero_carte == 10:
-        s = "valet"
+        s = "valet\n"
         writer.write(s.encode())
         point += 10
     if numero_carte == 11:
-        s = "dame"
+        s = "dame\n"
         writer.write(s.encode())
         point += 10
     if numero_carte == 12:
-        s = "roi"
+        s = "roi\n"
         writer.write(s.encode())
         point += 10
     if numero_carte == 13:
-        s ="AS"
+        s ="AS\n"
         writer.write(s.encode())
         n_as += 1
 
@@ -153,28 +153,28 @@ def gen_carte(carte_off, point, n_as, reader, writer):
 
 
     if type_carte == 1:
-        s = "Coeur"
+        s = "Coeur\n"
         writer.write(s.encode())
 
         a = gen_carte2(numero_carte, point, n_as, reader, writer)
         carte_off.append(str(type_carte) + str(numero_carte))
 
     elif type_carte == 2:
-        s = "Carreau"
+        s = "Carreau\n"
         writer.write(s.encode())
 
         a = gen_carte2(numero_carte, point, n_as, reader, writer)
         carte_off.append(str(type_carte) + str(numero_carte))
 
     elif type_carte == 3:
-        s = "Pique"
+        s = "Pique\n"
         writer.write(s.encode())
 
         a = gen_carte2(numero_carte, point, n_as, reader, writer)
         carte_off.append(str(type_carte) + str(numero_carte))
 
     elif type_carte == 4:
-        s = "Trèfle"
+        s = "Trèfle\n"
         writer.write(s.encode())
 
         a = gen_carte2(numero_carte, point, n_as, reader, writer)
@@ -267,17 +267,18 @@ async def joueur_request(reader, writer):
             writer.write(s.encode())
 
             if JBlack.getScore() > 21:
-                s = "OOUUUT"
+                s = "OOUUUT\n"
                 writer.write(s.encode())
-                s = "votre somme total : " + str(JBlack.getScore())
-                s = "Coeur"
+                s = "votre somme total : " + str(JBlack.getScore()) + "\n"
+                writer.write(s.encode())
+                s = "Coeur\n"
                 writer.write(s.encode())
                 break
 
             if JBlack.getScore() == 21:
-                s = "blakjack win"
+                s = "blakjack win\n"
                 writer.write(s.encode())
-                s = "votre somme total : " + str(JBlack.getScore())
+                s = "votre somme total : " + str(JBlack.getScore()) + "\n"
                 writer.write(s.encode())
                 break
 
@@ -287,18 +288,18 @@ async def joueur_request(reader, writer):
 
             val = croupier(carte_off, Nombre_As)
 
-            s = "Votre somme total : " + str(JBlack.getScore())
+            s = "Votre somme total : " + str(JBlack.getScore()) + "\n"
             writer.write(s.encode())
 
 
-            s = "le croupier à " + str(val)
+            s = "le croupier à " + str(val) + "\n"
             writer.write(s.encode())
 
             if val > JBlack.getScore() and val <= 21:
-                s = "le croupier gagne"
+                s = "le croupier gagne\n"
                 writer.write(s.encode())
             else:
-                s = "le joueur gagne"
+                s = "le joueur gagne\n"
                 writer.write(s.encode())
 
         print(message)
