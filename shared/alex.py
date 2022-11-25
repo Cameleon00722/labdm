@@ -1,15 +1,6 @@
 import random
 
-class Cartes:
-    def __init__(self, suite, valeur, carte_valeur):
-        # Suite des carte tel que coeur pique ...
-        self.suite = suite
-
-        # Représentation des cartes Roi, As ...
-        self.valeur = valeur
-
-        # Valeur des cartes
-        self.carte_valeur = carte_valeur
+carte_off = []
 
 
 class Joueur:
@@ -28,8 +19,6 @@ class Joueur:
 
     def setMainJ(self, lst_main):
         self.mainJ = lst_main
-
-carte_off = []
 
 
 def gen_carte2(numero_carte, point, n_as):
@@ -72,6 +61,7 @@ def gen_carte2(numero_carte, point, n_as):
     if numero_carte == 13:
         print("as")
         n_as += 1
+
         if point >= 11:
             point += 1
         else:
@@ -85,7 +75,6 @@ def gen_carte(carte_off, point, n_as):
     numero_carte = random.randint(1, 13)
 
     while str(type_carte) + str(numero_carte) in carte_off:
-        #print("déjà pris : " + str(type_carte) + str(numero_carte))
         type_carte = random.randint(1, 4)
         numero_carte = random.randint(1, 13)
 
@@ -117,47 +106,47 @@ def gen_carte(carte_off, point, n_as):
 
 
 def croupier(carte_off, n_as):
-    pts = 0
+    pts_Croupier = 0
 
-    while pts < 17:
-        b = gen_carte(carte_off, pts, n_as)
-        pts = + b
+    while pts_Croupier < 17:
+        GainPts = gen_carte(carte_off, pts_Croupier, n_as)
+        pts_Croupier = + GainPts
 
-    return pts
+    return pts_Croupier
 
 
 def blackjack(carte_off):
-    point = 0
+    Point_Joueur = 0
     jouer = 1
-    n_as = 0
+    Nombre_As = 0
 
     while jouer == 1:
         jouer = int(input("1 pour prendre 0 pour passer : "))
 
         if jouer == 1:
-            a = gen_carte(carte_off, point, n_as)
-            point = + a
+            a = gen_carte(carte_off, Point_Joueur, Nombre_As)
+            Point_Joueur = + a
 
-            if point > 21:
+            if Point_Joueur > 21:
                 print("OUUUT")
-                print("votre somme total : ", point)
+                print("votre somme total : ", Point_Joueur)
                 break
 
-            if point == 21:
+            if Point_Joueur == 21:
                 print("blakjack win")
-                print("votre somme total : ", point)
+                print("votre somme total : ", Point_Joueur)
                 break
 
 
         elif jouer == 0:
 
-            val = croupier(carte_off, n_as)
+            val = croupier(carte_off, Nombre_As)
 
-            print("votre somme total : ", point)
+            print("votre somme total : ", Point_Joueur)
 
             print("le croupier à ", val)
 
-            if val > point and val <= 21:
+            if val > Point_Joueur and val <= 21:
                 print("le croupier gagne")
             else:
                 print("le joueur gagne")
@@ -165,6 +154,7 @@ def blackjack(carte_off):
         else:
             print("erreur")
             jouer = 1
+
 
 while True:
     blackjack(carte_off)

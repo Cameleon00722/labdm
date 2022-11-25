@@ -1,17 +1,6 @@
 import random
 
-
-# Classe carte
-class Cartes:
-    def __init__(self, suite, valeur, carte_valeur):
-        # Suite des carte tel que coeur pique ...
-        self.suite = suite
-
-        # Représentation des cartes Roi, As ...
-        self.valeur = valeur
-
-        # Valeur des cartes
-        self.carte_valeur = carte_valeur
+carte_off = []
 
 
 class Joueur:
@@ -32,320 +21,141 @@ class Joueur:
         self.mainJ = lst_main
 
 
-# Affiché la carte
-def print_cartes(cartes, dissimuler):
-    s = ""
-    for carte in cartes:
-        s = s + "\t ________________"
-    if dissimuler:
-        s += "\t ________________"
-    print(s)
+def gen_carte2(numero_carte, point, n_as):
+    if numero_carte == 1:
+        print("2")
+        point += 2
+    if numero_carte == 2:
+        print("3")
+        point += 3
+    if numero_carte == 3:
+        print("4")
+        point += 4
+    if numero_carte == 4:
+        print("5")
+        point += 5
+    if numero_carte == 5:
+        print("6")
+        point += 6
+    if numero_carte == 6:
+        print("7")
+        point += 7
+    if numero_carte == 7:
+        print("8")
+        point += 8
+    if numero_carte == 8:
+        print("9")
+        point += 9
+    if numero_carte == 9:
+        print("10")
+        point += 10
+    if numero_carte == 10:
+        print("valet")
+        point += 10
+    if numero_carte == 11:
+        print("dame")
+        point += 10
+    if numero_carte == 12:
+        print("roi")
+        point += 10
+    if numero_carte == 13:
+        print("as")
+        n_as += 1
 
-    s = ""
-    for carte in cartes:
-        s = s + "\t|                |"
-    if dissimuler:
-        s += "\t|                |"
-    print(s)
-
-    s = ""
-    for carte in cartes:
-        if carte.valeur == '10':
-            s = s + "\t|  {}            |".format(carte.valeur)
+        if point >= 11:
+            point += 1
         else:
-            s = s + "\t|  {}             |".format(carte.valeur)
-    if dissimuler:
-        s += "\t|                |"
-    print(s)
+            point += 11
 
-    s = ""
-    for carte in cartes:
-        s = s + "\t|                |"
-    if dissimuler:
-        s += "\t|      * *       |"
-    print(s)
-
-    s = ""
-    for carte in cartes:
-        s = s + "\t|                |"
-    if dissimuler:
-        s += "\t|    *     *     |"
-    print(s)
-
-    s = ""
-    for carte in cartes:
-        s = s + "\t|                |"
-    if dissimuler:
-        s += "\t|   *       *    |"
-    print(s)
-
-    s = ""
-    for carte in cartes:
-        s = s + "\t|                |"
-    if dissimuler:
-        s += "\t|   *       *    |"
-    print(s)
-
-    s = ""
-    for carte in cartes:
-        s = s + "\t|       {}        |".format(carte.suite)
-    if dissimuler:
-        s += "\t|          *     |"
-    print(s)
-
-    s = ""
-    for carte in cartes:
-        s = s + "\t|                |"
-    if dissimuler:
-        s += "\t|         *      |"
-    print(s)
-
-    s = ""
-    for carte in cartes:
-        s = s + "\t|                |"
-    if dissimuler:
-        s += "\t|        *       |"
-    print(s)
-
-    s = ""
-    for carte in cartes:
-        s = s + "\t|                |"
-    if dissimuler:
-        s += "\t|                |"
-    print(s)
-
-    s = ""
-    for carte in cartes:
-        s = s + "\t|                |"
-    if dissimuler:
-        s += "\t|                |"
-    print(s)
-
-    s = ""
-    for carte in cartes:
-        if carte.valeur == '10':
-            s = s + "\t|            {}  |".format(carte.valeur)
-        else:
-            s = s + "\t|            {}   |".format(carte.valeur)
-    if dissimuler:
-        s += "\t|        *       |"
-    print(s)
-
-    s = ""
-    for carte in cartes:
-        s = s + "\t|________________|"
-    if dissimuler:
-        s += "\t|________________|"
-    print(s)
-
-    print()
+    return point
 
 
-# Game blackjack
-def blackjack(deck):
-    # Cartes du joueur et dealeur
+def gen_carte(carte_off, point, n_as):
+    type_carte = random.randint(1, 4)
+    numero_carte = random.randint(1, 13)
 
-    joueur = Joueur("test")
+    while str(type_carte) + str(numero_carte) in carte_off:
+        type_carte = random.randint(1, 4)
+        numero_carte = random.randint(1, 13)
 
-    joueur_cartes = joueur.getMainJ()
-    dealer_cards = []
+    if type_carte == 1:
+        print("♥ ", end='')
 
-    # Score du joueur et dealer
-    joueur_score = joueur.getScore()
-    dealer_score = 0
+        a = gen_carte2(numero_carte, point, n_as)
+        carte_off.append(str(type_carte) + str(numero_carte))
 
-    while len(joueur_cartes) < 2:
+    elif type_carte == 2:
+        print("♦ ", end='')
 
-        joueur_carte = random.choice(deck)
-        joueur_cartes.append(joueur_carte)
-        deck.remove(joueur_carte)
+        a = gen_carte2(numero_carte, point, n_as)
+        carte_off.append(str(type_carte) + str(numero_carte))
 
-        joueur_score += joueur_carte.carte_valeur
+    elif type_carte == 3:
+        print("♠ ", end='')
 
-        if len(joueur_cartes) == 2:
-            if joueur_cartes[0].carte_valeur == 11 and joueur_cartes[1].carte_valeur == 11:
-                joueur_cartes[0].carte_valeur = 1
-                joueur_score -= 10
+        a = gen_carte2(numero_carte, point, n_as)
+        carte_off.append(str(type_carte) + str(numero_carte))
 
-        print("CARTES JOUEUR: ")
-        print_cartes(joueur_cartes, False)
-        print("SCORE JOUEUR = ", joueur_score)
+    elif type_carte == 4:
+        print("♣ ", end='')
 
-        dealer_card = random.choice(deck)
-        dealer_cards.append(dealer_card)
-        deck.remove(dealer_card)
+        a = gen_carte2(numero_carte, point, n_as)
+        carte_off.append(str(type_carte) + str(numero_carte))
 
-        # Update score
-        dealer_score += dealer_card.carte_valeur
+    return a
 
-        print("CARTES CROUPIER: ")
-        if len(dealer_cards) == 1:
-            print_cartes(dealer_cards, False)
-            print("CROUPIER SCORE = ", dealer_score)
-        else:
-            print_cartes(dealer_cards[:-1], True)
-            print("CROUPIER SCORE = ", dealer_score - dealer_cards[-1].carte_valeur)
 
-        if len(dealer_cards) == 2:
-            if dealer_cards[0].carte_valeur == 11 and dealer_cards[1].carte_valeur == 11:
-                dealer_cards[1].carte_valeur = 1
-                dealer_score -= 10
+def croupier(carte_off, n_as):
+    pts_Croupier = 0
 
-    # Joueur a le blackjack
-    if joueur_score == 21:
-        print("Le joueur remporte")
-        quit()
+    while pts_Croupier < 17:
+        GainPts = gen_carte(carte_off, pts_Croupier, n_as)
+        pts_Croupier = + GainPts
 
-    # Print dealer et joueur cartes
-    print("CARTES CROUPIER: ")
-    print_cartes(dealer_cards[:-1], True)
-    print("CROUPIER SCORE = ", dealer_score - dealer_cards[-1].carte_valeur)
+    return pts_Croupier
 
-    print()
 
-    print("CARTES JOUEUR: ")
-    print_cartes(joueur_cartes, False)
-    print("SCORE JOUEUR = ", joueur_score)
+def blackjack(carte_off):
+    Point_Joueur = 0
+    jouer = 1
+    Nombre_As = 0
 
-    while joueur_score < 21:
-        choice = input("Entrez P pour Prendre ou R pour Rester : ")
+    while jouer == 1:
+        jouer = int(input("1 pour prendre 0 pour passer : "))
 
-        if choice.upper() != 'P' and choice.upper() != 'R':
-            print("erreur input merci de recommencer")
+        if jouer == 1:
+            a = gen_carte(carte_off, Point_Joueur, Nombre_As)
+            Point_Joueur = + a
 
-        # Le joueur prend
-        if choice.upper() == 'P':
+            if Point_Joueur > 21:
+                print("OUUUT")
+                print("votre somme total : ", Point_Joueur)
+                break
 
-            joueur_carte = random.choice(deck)
-            joueur_cartes.append(joueur_carte)
-            deck.remove(joueur_carte)
+            if Point_Joueur == 21:
+                print("blakjack win")
+                print("votre somme total : ", Point_Joueur)
+                break
 
-            # Update joueur score
-            joueur_score += joueur_carte.carte_valeur
 
-            c = 0
-            while joueur_score > 21 and c < len(joueur_cartes):
-                if joueur_cartes[c].carte_valeur == 11:
-                    joueur_cartes[c].carte_valeur = 1
-                    joueur_score -= 10
-                    c += 1
-                else:
-                    c += 1
+        elif jouer == 0:
 
-            # Print joueur et dealer cartes
-            print("CARTES CROUPIER: ")
-            print_cartes(dealer_cards[:-1], True)
-            print("CROUPIER SCORE = ", dealer_score - dealer_cards[-1].carte_valeur)
+            val = croupier(carte_off, Nombre_As)
 
-            print()
+            print("votre somme total : ", Point_Joueur)
 
-            print("CARTES JOUEUR: ")
-            print_cartes(joueur_cartes, False)
-            print("SCORE JOUEUR = ", joueur_score)
+            print("le croupier à ", val)
 
-        # Si joueur reste
-        if choice.upper() == 'R':
-            break
-
-    # Print joueur et delaer cartes
-    print("CARTES JOUEUR: ")
-    print_cartes(joueur_cartes, False)
-    print("SCORE JOUEUR = ", joueur_score)
-
-    print()
-    print("LE CROUPIER REVELE LES CARTES....")
-
-    print("CARTES CROUPIER: ")
-    print_cartes(dealer_cards, False)
-    print("CROUPIER SCORE = ", dealer_score)
-
-    # Check si le joueur a le blackjack
-    if joueur_score == 21:
-        print("LE JOUEUR A LE BLACKJACK")
-        quit()
-
-    # Check si le joueur depasse
-    if joueur_score > 21:
-        print("LE JOUEUR A DEPASSER!!! PERDU!!!")
-        quit()
-
-    while dealer_score < 17:
-
-        print("LE CROUPIER DECIDE DE PRENDRE.....")
-
-        dealer_card = random.choice(deck)
-        dealer_cards.append(dealer_card)
-        deck.remove(dealer_card)
-
-        dealer_score += dealer_card.carte_valeur
-
-        # Update score
-        c = 0
-        while dealer_score > 21 and c < len(dealer_cards):
-            if dealer_cards[c].carte_valeur == 11:
-                dealer_cards[c].carte_valeur = 1
-                dealer_score -= 10
-                c += 1
+            if val > Point_Joueur and val <= 21:
+                print("le croupier gagne")
             else:
-                c += 1
+                print("le joueur gagne")
 
-        # print joueur et dealer cartes
-        print("CARTES JOUEUR: ")
-        print_cartes(joueur_cartes, False)
-        print("SCORE JOUEUR = ", joueur_score)
-
-        print()
-
-        print("CARTES CROUPIER: ")
-        print_cartes(dealer_cards, False)
-        print("CROUPIER SCORE = ", dealer_score)
-
-    # Dealer depasse
-    if dealer_score > 21:
-        print("LE CROUPIER A DEPASSER!!! VOUS AVEZ GAGNE!!!")
-        quit()
-
-        # Le dealer a le blackjack
-    if dealer_score == 21:
-        print("LE CROUPIER A LE BLACKJACK!!! LE JOUEUR A PERDUE")
-        quit()
-
-    # Match nul
-    if dealer_score == joueur_score:
-        print("MATCH NUL!!!!")
-
-    # Joueur Wins
-    elif joueur_score > dealer_score:
-        print("LE JOUEUR A GAGNE!!!")
-
-        # Dealer Wins
-    else:
-        print("LE CROUPIER A GAGNE!!!")
+        else:
+            print("erreur")
+            jouer = 1
 
 
-if __name__ == '__main__':
+while True:
+    blackjack(carte_off)
 
-    suites = ["♠", "♥", "♣", "♦"]
-
-    # Valeur des suites
-    suites_valeur = {"♠": "\u2664", "♥": "\u2661", "♣": "\u2667", "♦": "\u2662"}
-
-    # Types de cartes
-    cartes = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
-
-    # Valeur des cartes
-    cartes_valeurs = {"A": 11, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "J": 10,
-                      "Q": 10, "K": 10}
-
-    # Le deck des cartes
-    deck = []
-
-    # Boucle pour tout type de suites
-    for suite in suites:
-
-        # Boucle pour tous les types de cartes dans une suite
-        for carte in cartes:
-            # Ajouter la carte au deck
-            deck.append(Cartes(suites_valeur[suite], carte, cartes_valeurs[carte]))
-
-    blackjack(deck)
