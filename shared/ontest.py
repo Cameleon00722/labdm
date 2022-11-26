@@ -29,8 +29,11 @@ class table:
     def getTemps(self):
         return self.temps
 
+    def getCptJ(self):
+        return self.CptJ
+
     def setCptJ(self, var):
-        self.temps = var
+        self.CptJ = var
 
     def getNom(self):
         return self.nom
@@ -211,8 +214,6 @@ async def leave(joueur, writer, i):
             tableaudetable[i].lst_table.remove(joueur)
     writer.write(message.encode())
     writer.close()
-    return False
-
 
 async def joueur_request(reader, writer):
     partie = False
@@ -231,7 +232,6 @@ async def joueur_request(reader, writer):
             i.ajouter_table(joueur)
             if i.getTable()[0] != joueur:
 
-                tableaudetable[indextable].setScore(await croupier(carte_off, Nombre_As, reader, writer))
 
                 while i.getTemps() != 0:
                     messte = "Temps restants avant connexion : " + str(i.getTemps()) + "\n"
@@ -239,11 +239,14 @@ async def joueur_request(reader, writer):
                     await asyncio.sleep(1)
 
             else:
+                tableaudetable[indextable].setScore(await croupier(carte_off, Nombre_As, reader, writer))
+
                 while i.getTemps() != 0:
                     messte = "Temps restants avant connexion : " + str(i.getTemps()) + "\n"
                     writer.write(messte.encode())
                     await asyncio.sleep(1)
                     i.setTemps(i.getTemps() - 1)
+
             mess2 = "Connexion a la table réussi!\n"
             writer.write(mess2.encode())
             mess2 = ".\n"
@@ -265,11 +268,11 @@ async def joueur_request(reader, writer):
         if reader.at_eof():
             print(f"Socket closed by user {joueur}")
             data = b"END"
-            partie = False
         message = data.decode().strip()
 
         if message == "END":
-            partie = leave(joueur, writer, indextable)
+            await leave(joueur, writer, indextable)
+            partie = False
 
         if message == "MORE 1":
             mess = f"utilisateur {joueur} prend une carte."
@@ -285,14 +288,14 @@ async def joueur_request(reader, writer):
                 writer.write(s.encode())
                 s = "votre somme total : " + str(JBlack.getScore()) + "\n"
                 writer.write(s.encode())
-                partie = leave(joueur, writer, indextable)
+                await leave(joueur, writer, indextable)
 
             if JBlack.getScore() == 21:
                 s = "blakjack win\n"
                 writer.write(s.encode())
                 s = "votre somme total : " + str(JBlack.getScore()) + "\n"
                 writer.write(s.encode())
-                partie = leave(joueur, writer, indextable)
+                await leave(joueur, writer, indextable)
             print("fin de more 1 ")
             mess2 = ".\n"
             writer.write(mess2.encode())
@@ -304,15 +307,12 @@ async def joueur_request(reader, writer):
 
             tableaudetable[indextable].CptJ += 1
 
-            me = (str(tableaudetable[indextable].CptJ) + "  " + str(len(tableaudetable[indextable].lst_table)) + "\n")
-            writer.write(me.encode())
-
-
             x = int (tableaudetable[indextable].CptJ)
 
             while x != len(tableaudetable[indextable].lst_table) :
                 x = tableaudetable[indextable].CptJ
                 await asyncio.sleep(1)
+
 
             # retourScore = croupier(carte_off, Nombre_As, reader, writer)
 
@@ -325,14 +325,16 @@ async def joueur_request(reader, writer):
             if JBlack.getScore() < tableaudetable[indextable].getScore() <= 21:
                 s = "le croupier gagne\n"
                 writer.write(s.encode())
-                partie = leave(joueur, writer, indextable)
+                await leave(joueur, writer, indextable)
 
             else:
                 s = "le joueur gagne\n"
                 writer.write(s.encode())
-                partie = leave(joueur, writer, indextable)
+                await leave(joueur, writer, indextable)
 
-        # await forward(writer, addr, message)
+        if len(tableaudetable[indextable].lst_table) == 0:
+            partie = False
+
 
 
 async def server():
