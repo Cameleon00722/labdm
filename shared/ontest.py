@@ -205,7 +205,9 @@ def croupier(carte_off, n_as, reader, writer):
 
     while pts_Croupier < 17:
         GainPts = gen_carte(carte_off, pts_Croupier, n_as, reader, writer)
-        pts_Croupier = pts_Croupier + GainPts
+        print( pts_Croupier)
+        pts_Croupier += GainPts
+        print(pts_Croupier)
 
     return pts_Croupier
 
@@ -306,6 +308,7 @@ async def joueur_request(reader, writer):
             mess = f"utilisateur {joueur} ne prend pas de carte."
             print(mess)
 
+            #retourScore = croupier(carte_off, Nombre_As, reader, writer)
             Cblack.setScore(croupier(carte_off, Nombre_As, reader, writer))
 
             s = "Votre somme total : " + str(JBlack.getScore()) + "\n"
