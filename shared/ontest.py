@@ -202,7 +202,7 @@ async def croupier(carte_off, n_as, reader, writer):
     return GainPts
 
 
-def leave(joueur, writer, i):
+async def leave(joueur, writer, i):
     message = "END"
     mess = f"User {joueur} leave the server2."
     print(mess)
@@ -231,7 +231,6 @@ async def joueur_request(reader, writer):
             i.ajouter_table(joueur)
             if i.getTable()[0] != joueur:
 
-                tableaudetable[indextable].setScore(await croupier(carte_off, Nombre_As, reader, writer))
 
                 while i.getTemps() != 0:
                     messte = "Temps restants avant connexion : " + str(i.getTemps()) + "\n"
@@ -239,11 +238,14 @@ async def joueur_request(reader, writer):
                     await asyncio.sleep(1)
 
             else:
+                tableaudetable[indextable].setScore(await croupier(carte_off, Nombre_As, reader, writer))
+
                 while i.getTemps() != 0:
                     messte = "Temps restants avant connexion : " + str(i.getTemps()) + "\n"
                     writer.write(messte.encode())
                     await asyncio.sleep(1)
                     i.setTemps(i.getTemps() - 1)
+
             mess2 = "Connexion a la table réussi!\n"
             writer.write(mess2.encode())
             mess2 = ".\n"
@@ -268,7 +270,7 @@ async def joueur_request(reader, writer):
         message = data.decode().strip()
 
         if message == "END":
-            partie = leave(joueur, writer, indextable)
+            partie = await leave(joueur, writer, indextable)
 
         if message == "MORE 1":
             mess = f"utilisateur {joueur} prend une carte."
@@ -284,14 +286,14 @@ async def joueur_request(reader, writer):
                 writer.write(s.encode())
                 s = "votre somme total : " + str(JBlack.getScore()) + "\n"
                 writer.write(s.encode())
-                partie = leave(joueur, writer, indextable)
+                partie = await leave(joueur, writer, indextable)
 
             if JBlack.getScore() == 21:
                 s = "blakjack win\n"
                 writer.write(s.encode())
                 s = "votre somme total : " + str(JBlack.getScore()) + "\n"
                 writer.write(s.encode())
-                partie = leave(joueur, writer, indextable)
+                partie = await leave(joueur, writer, indextable)
             print("fin de more 1 ")
             mess2 = ".\n"
             writer.write(mess2.encode())
@@ -320,12 +322,12 @@ async def joueur_request(reader, writer):
             if JBlack.getScore() < tableaudetable[indextable].getScore() <= 21:
                 s = "le croupier gagne\n"
                 writer.write(s.encode())
-                partie = leave(joueur, writer, indextable)
+                partie = await leave(joueur, writer, indextable)
 
             else:
                 s = "le joueur gagne\n"
                 writer.write(s.encode())
-                partie = leave(joueur, writer, indextable)
+                partie = await leave(joueur, writer, indextable)
 
         # await forward(writer, addr, message)
 
