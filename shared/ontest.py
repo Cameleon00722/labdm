@@ -2,7 +2,6 @@ import asyncio
 import random
 
 
-
 class table:
     def __init__(self, nom, temps):
         # nom de la table
@@ -53,14 +52,32 @@ class Joueur:
     def setMainJ(self, lst_main):
         self.mainJ = lst_main
 
+class Croupier:
+    def __init__(self, name):
+        self.mainC = []
+
+        self.name = name
+
+        self.score = 0
+
+    def getMainJ(self):
+        return self.mainC
+
+    def getScore(self):
+        return self.score
+
+    def setScore(self, add):
+        self.score = add
+
+    def setMainJ(self, lst_main):
+        self.mainJ = lst_main
+
+
 # liste des tables de jeux , sous tab de la classe = joueur
 tableaudetable = []
 
 
-
 async def croupier_request(reader, writer):
-
-
     mess = "Bienvenue\n"
     writer.write(mess.encode())
     data = await reader.read(256)
@@ -81,7 +98,8 @@ async def croupier_request(reader, writer):
     for i in tableaudetable:
         i.affiche()
 
-async def gen_carte2(numero_carte, point, n_as, reader, writer):
+
+def gen_carte2(numero_carte, point, n_as, reader, writer):
     if numero_carte == 1:
         s = "2\n"
         writer.write(s.encode())
@@ -131,7 +149,7 @@ async def gen_carte2(numero_carte, point, n_as, reader, writer):
         writer.write(s.encode())
         point += 10
     if numero_carte == 13:
-        s ="AS\n"
+        s = "AS\n"
         writer.write(s.encode())
         n_as += 1
 
@@ -143,14 +161,13 @@ async def gen_carte2(numero_carte, point, n_as, reader, writer):
     return point
 
 
-async def gen_carte(carte_off, point, n_as, reader, writer):
+def gen_carte(carte_off, point, n_as, reader, writer):
     type_carte = random.randint(1, 4)
     numero_carte = random.randint(1, 13)
 
     while str(type_carte) + str(numero_carte) in carte_off:
         type_carte = random.randint(1, 4)
         numero_carte = random.randint(1, 13)
-
 
     if type_carte == 1:
         s = "Coeur "
@@ -188,26 +205,24 @@ def croupier(carte_off, n_as, reader, writer):
 
     while pts_Croupier < 17:
         GainPts = gen_carte(carte_off, pts_Croupier, n_as, reader, writer)
-        pts_Croupier = + GainPts
+        pts_Croupier = pts_Croupier + GainPts
 
     return pts_Croupier
 
 
-def leave (joueur,writer,i) :
+async def leave(joueur, writer, i):
     message = "END"
     mess = f"User {joueur} leave the server2."
     print(mess)
-    for z in tableaudetable[i].lst_table :
-        if z == joueur :
+    for z in tableaudetable[i].lst_table:
+        if z == joueur:
             tableaudetable[i].lst_table.remove(joueur)
     writer.write(message.encode())
     writer.close()
     return False
 
 
-
 async def joueur_request(reader, writer):
-
     partie = False
 
     joueur = str(writer.get_extra_info('peername')[0])
@@ -220,14 +235,14 @@ async def joueur_request(reader, writer):
         if i.nom == nomTab and i.getTemps() > 0:
             partie = True
             i.ajouter_table(joueur)
-            if i.getTable()[0] != joueur :
+            if i.getTable()[0] != joueur:
                 while i.getTemps() != 0:
-                    messte = "Temps restants avant connexion : "+str(i.getTemps()) +"\n"
+                    messte = "Temps restants avant connexion : " + str(i.getTemps()) + "\n"
                     writer.write(messte.encode())
                     await asyncio.sleep(1)
-            else :
+            else:
                 while i.getTemps() != 0:
-                    messte = "Temps restants avant connexion : "+str(i.getTemps()) +"\n"
+                    messte = "Temps restants avant connexion : " + str(i.getTemps()) + "\n"
                     writer.write(messte.encode())
                     await asyncio.sleep(1)
                     i.setTemps(i.getTemps() - 1)
@@ -236,15 +251,16 @@ async def joueur_request(reader, writer):
             mess2 = ".\n"
             writer.write(mess2.encode())
             break
-        indextable+=1
-    if partie == False:
+        indextable += 1
+    if not partie:
         test = "END"
         writer.write(test.encode())
         writer.close()
 
-#################### black jack ###########################""
+    #################### black jack ###########################
     carte_off = []
     JBlack = Joueur(joueur)
+    Cblack = Croupier("Croupe")
 
     jouer = 1
     Nombre_As = 0
@@ -252,13 +268,13 @@ async def joueur_request(reader, writer):
     while partie:
 
         data = await reader.read(256)
-        if reader.at_eof() :
-           print(f"Socket closed by user {joueur}")
-           data = b"END"
+        if reader.at_eof():
+            print(f"Socket closed by user {joueur}")
+            data = b"END"
         message = data.decode().strip()
 
         if message == "END":
-            partie = leave(joueur,writer,indextable)
+            partie = leave(joueur, writer, indextable)
 
         if message == "MORE 1":
             mess = f"utilisateur {joueur} prend une carte."
@@ -266,7 +282,7 @@ async def joueur_request(reader, writer):
 
             a = gen_carte(carte_off, JBlack.getScore(), Nombre_As, reader, writer)
             JBlack.setScore(a)
-            s = "score : " + str(JBlack.getScore())+"\n"
+            s = "score : " + str(JBlack.getScore()) + "\n"
             writer.write(s.encode())
 
             if JBlack.getScore() > 21:
@@ -274,15 +290,14 @@ async def joueur_request(reader, writer):
                 writer.write(s.encode())
                 s = "votre somme total : " + str(JBlack.getScore()) + "\n"
                 writer.write(s.encode())
-                partie = leave(joueur,writer,indextable)
-
+                partie = leave(joueur, writer, indextable)
 
             if JBlack.getScore() == 21:
                 s = "blakjack win\n"
                 writer.write(s.encode())
                 s = "votre somme total : " + str(JBlack.getScore()) + "\n"
                 writer.write(s.encode())
-                partie = leave(joueur,writer,indextable)
+                partie = leave(joueur, writer, indextable)
             print("fin de more 1 ")
             mess2 = ".\n"
             writer.write(mess2.encode())
@@ -291,28 +306,25 @@ async def joueur_request(reader, writer):
             mess = f"utilisateur {joueur} ne prend pas de carte."
             print(mess)
 
-            val = croupier(carte_off, Nombre_As, reader, writer)
+            Cblack.setScore(croupier(carte_off, Nombre_As, reader, writer))
 
             s = "Votre somme total : " + str(JBlack.getScore()) + "\n"
             writer.write(s.encode())
 
-
-            s = "le croupier à " + str(val) + "\n"
+            s = "le croupier à " + str(Cblack.getScore()) + "\n"
             writer.write(s.encode())
 
-            if val > JBlack.getScore() and val <= 21:
+            if JBlack.getScore() < Cblack.getScore() <= 21:
                 s = "le croupier gagne\n"
                 writer.write(s.encode())
-                partie = leave(joueur,writer,indextable)
+                partie = leave(joueur, writer, indextable)
 
             else:
                 s = "le joueur gagne\n"
                 writer.write(s.encode())
-                partie = leave(joueur,writer,indextable)
+                partie = leave(joueur, writer, indextable)
 
-
-        #await forward(writer, addr, message)
-
+        # await forward(writer, addr, message)
 
 
 async def server():
