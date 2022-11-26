@@ -265,6 +265,7 @@ async def joueur_request(reader, writer):
         if reader.at_eof():
             print(f"Socket closed by user {joueur}")
             data = b"END"
+            partie = False
         message = data.decode().strip()
 
         if message == "END":
@@ -307,7 +308,10 @@ async def joueur_request(reader, writer):
             writer.write(me.encode())
 
 
-            while tableaudetable[indextable].CptJ != len(tableaudetable[indextable].lst_table):
+            x = int (tableaudetable[indextable].CptJ)
+
+            while x != len(tableaudetable[indextable].lst_table) :
+                x = tableaudetable[indextable].CptJ
                 await asyncio.sleep(1)
 
             # retourScore = croupier(carte_off, Nombre_As, reader, writer)
