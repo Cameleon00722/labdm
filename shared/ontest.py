@@ -52,11 +52,10 @@ class Joueur:
     def setMainJ(self, lst_main):
         self.mainJ = lst_main
 
-class Croupier:
-    def __init__(self, name):
-        self.mainC = []
 
-        self.name = name
+class Croupier:
+    def __init__(self):
+        self.mainC = []
 
         self.score = 0
 
@@ -201,11 +200,10 @@ def gen_carte(carte_off, point, n_as, reader, writer):
 
 
 async def croupier(carte_off, n_as, reader, writer):
-    pts_Croupier = 0
+    GainPts = 0
 
-    while pts_Croupier < 17:
-        GainPts = gen_carte(carte_off, pts_Croupier, n_as, reader, writer)
-        pts_Croupier = GainPts
+    while GainPts < 17:
+        GainPts = gen_carte(carte_off, GainPts, n_as, reader, writer)
 
     return GainPts
 
@@ -260,7 +258,7 @@ async def joueur_request(reader, writer):
     #################### black jack ###########################
     carte_off = []
     JBlack = Joueur(joueur)
-    Cblack = Croupier("Croupe")
+    Cblack = Croupier()
 
     jouer = 1
     Nombre_As = 0
@@ -306,8 +304,8 @@ async def joueur_request(reader, writer):
             mess = f"utilisateur {joueur} ne prend pas de carte."
             print(mess)
 
-            #retourScore = croupier(carte_off, Nombre_As, reader, writer)
-            Cblack.setScore(croupier(carte_off, Nombre_As, reader, writer))
+            # retourScore = croupier(carte_off, Nombre_As, reader, writer)
+            Cblack.setScore(await croupier(carte_off, Nombre_As, reader, writer))
 
             s = "Votre somme total : " + str(JBlack.getScore()) + "\n"
             writer.write(s.encode())
