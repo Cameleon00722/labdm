@@ -229,7 +229,9 @@ async def joueur_request(reader, writer):
     partie = False
 
 
-    joueur = str(writer.get_extra_info('peername')[0])
+    joueur = writer
+    
+
     mess = "Bienvenue\n"
     writer.write(mess.encode())
     data = await reader.read(256)
@@ -320,7 +322,7 @@ async def joueur_request(reader, writer):
 
             if tableaudetable[indextable].CptJ == len(tableaudetable[indextable].lst_table):
 
-            # retourScore = croupier(carte_off, Nombre_As, reader, writer)
+
                 Cblack.setScore(await croupier(carte_off, Nombre_As, reader, writer))
 
                 s = "Votre somme total : " + str(JBlack.getScore()) + "\n"
