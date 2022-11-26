@@ -30,7 +30,7 @@ class table:
         return self.temps
 
     def setCptJ(self, var):
-        self.temps = var
+        self.CptJ = var
 
     def getNom(self):
         return self.nom
@@ -211,6 +211,8 @@ async def leave(joueur, writer, i):
             tableaudetable[i].lst_table.remove(joueur)
     writer.write(message.encode())
 
+    return False
+
 
 async def joueur_request(reader, writer):
     partie = False
@@ -268,7 +270,7 @@ async def joueur_request(reader, writer):
         message = data.decode().strip()
 
         if message == "END":
-            await leave(joueur, writer, indextable)
+            partie = await leave(joueur, writer, indextable)
             partie = False
 
         if message == "MORE 1":
@@ -285,14 +287,14 @@ async def joueur_request(reader, writer):
                 writer.write(s.encode())
                 s = "votre somme total : " + str(JBlack.getScore()) + "\n"
                 writer.write(s.encode())
-                await leave(joueur, writer, indextable)
+                partie = await leave(joueur, writer, indextable)
 
             if JBlack.getScore() == 21:
                 s = "blakjack win\n"
                 writer.write(s.encode())
                 s = "votre somme total : " + str(JBlack.getScore()) + "\n"
                 writer.write(s.encode())
-                await leave(joueur, writer, indextable)
+                partie = await leave(joueur, writer, indextable)
             print("fin de more 1 ")
             mess2 = ".\n"
             writer.write(mess2.encode())
@@ -321,17 +323,18 @@ async def joueur_request(reader, writer):
             if JBlack.getScore() < tableaudetable[indextable].getScore() <= 21:
                 s = "le croupier gagne\n"
                 writer.write(s.encode())
-                await leave(joueur, writer, indextable)
+                partie = await leave(joueur, writer, indextable)
 
             else:
                 s = "le joueur gagne\n"
                 writer.write(s.encode())
-                await leave(joueur, writer, indextable)
+                partie = await leave(joueur, writer, indextable)
 
         print("tableau : ", tableaudetable[indextable].lst_table[0])
-        if tableaudetable[indextable].lst_table[0] == None:
-            partie = False
+        if tableaudetable[indextable].CptJ == len(tableaudetable[indextable].lst_table):
+            print("test")
             writer.close()
+
 
 
 
