@@ -13,11 +13,24 @@ class table:
         # timer
         self.temps = temps
 
+        self.CptJ = 0
+
+        self.score = 0
+
+    def getScore(self):
+        return self.score
+
+    def setScore(self, add):
+        self.score = add
+
     def getTable(self):
         return self.lst_table
 
     def getTemps(self):
         return self.temps
+
+    def setCptJ(self, var):
+        self.temps = var
 
     def getNom(self):
         return self.nom
@@ -52,11 +65,10 @@ class Joueur:
     def setMainJ(self, lst_main):
         self.mainJ = lst_main
 
-class Croupier:
-    def __init__(self, name):
-        self.mainC = []
 
-        self.name = name
+class Croupier:
+    def __init__(self):
+        self.mainC = []
 
         self.score = 0
 
@@ -200,16 +212,13 @@ def gen_carte(carte_off, point, n_as, reader, writer):
     return a
 
 
-def croupier(carte_off, n_as, reader, writer):
-    pts_Croupier = 0
+async def croupier(carte_off, n_as, reader, writer):
+    GainPts = 0
 
-    while pts_Croupier < 17:
-        GainPts = gen_carte(carte_off, pts_Croupier, n_as, reader, writer)
-        print(pts_Croupier)
-        pts_Croupier += GainPts
-        print(pts_Croupier)
+    while GainPts < 17:
+        GainPts = gen_carte(carte_off, GainPts, n_as, reader, writer)
 
-    return pts_Croupier
+    return GainPts
 
 
 async def leave(joueur, writer, i):
@@ -226,6 +235,8 @@ async def leave(joueur, writer, i):
 
 async def joueur_request(reader, writer):
     partie = False
+    carte_off = []
+    Nombre_As = 0
 
     joueur = str(writer.get_extra_info('peername')[0])
     mess = "Bienvenue\n"
@@ -238,10 +249,15 @@ async def joueur_request(reader, writer):
             partie = True
             i.ajouter_table(joueur)
             if i.getTable()[0] != joueur:
+
+
+                tableaudetable[indextable].setScore(await croupier(carte_off, Nombre_As, reader, writer))
+
                 while i.getTemps() != 0:
                     messte = "Temps restants avant connexion : " + str(i.getTemps()) + "\n"
                     writer.write(messte.encode())
                     await asyncio.sleep(1)
+
             else:
                 while i.getTemps() != 0:
                     messte = "Temps restants avant connexion : " + str(i.getTemps()) + "\n"
@@ -260,12 +276,9 @@ async def joueur_request(reader, writer):
         writer.close()
 
     #################### black jack ###########################
-    carte_off = []
-    JBlack = Joueur(joueur)
-    Cblack = Croupier("Croupe")
 
-    jouer = 1
-    Nombre_As = 0
+    JBlack = Joueur(joueur)
+
 
     while partie:
 
@@ -306,18 +319,29 @@ async def joueur_request(reader, writer):
 
         if message == "MORE 0":
             mess = f"utilisateur {joueur} ne prend pas de carte."
+
             print(mess)
 
-            #retourScore = croupier(carte_off, Nombre_As, reader, writer)
-            Cblack.setScore(croupier(carte_off, Nombre_As, reader, writer))
 
-            s = "Votre somme total : " + str(JBlack.getScore()) + "\n"
+
+            tableaudetable[indextable].CptJ+=1
+
+            me=(str(tableaudetable[indextable].CptJ)+"  " +str(len(tableaudetable[indextable].lst_table))+"\n")
+            writer.write(me.encode())
+
+            while tableaudetable[indextable].CptJ != len(tableaudetable[indextable].lst_table):
+                await asyncio.sleep(1)
+
+            # retourScore = croupier(carte_off, Nombre_As, reader, writer)
+
+
+            s = "Votre somme total : " + str(tableaudetable[indextable].getScore()) + "\n"
             writer.write(s.encode())
 
-            s = "le croupier à " + str(Cblack.getScore()) + "\n"
+            s = "le croupier à " + str(tableaudetable[indextable].getScore()) + "\n"
             writer.write(s.encode())
 
-            if JBlack.getScore() < Cblack.getScore() <= 21:
+            if JBlack.getScore() < tableaudetable[indextable].getScore() <= 21:
                 s = "le croupier gagne\n"
                 writer.write(s.encode())
                 partie = leave(joueur, writer, indextable)

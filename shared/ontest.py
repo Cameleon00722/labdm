@@ -66,25 +66,6 @@ class Joueur:
         self.mainJ = lst_main
 
 
-class Croupier:
-    def __init__(self):
-        self.mainC = []
-
-        self.score = 0
-
-    def getMainJ(self):
-        return self.mainC
-
-    def getScore(self):
-        return self.score
-
-    def setScore(self, add):
-        self.score = add
-
-    def setMainJ(self, lst_main):
-        self.mainJ = lst_main
-
-
 # liste des tables de jeux , sous tab de la classe = joueur
 tableaudetable = []
 
@@ -250,7 +231,6 @@ async def joueur_request(reader, writer):
             i.ajouter_table(joueur)
             if i.getTable()[0] != joueur:
 
-
                 tableaudetable[indextable].setScore(await croupier(carte_off, Nombre_As, reader, writer))
 
                 while i.getTemps() != 0:
@@ -278,10 +258,6 @@ async def joueur_request(reader, writer):
     #################### black jack ###########################
 
     JBlack = Joueur(joueur)
-
-
-    jouer = 1
-
 
     while partie:
 
@@ -325,18 +301,15 @@ async def joueur_request(reader, writer):
 
             print(mess)
 
+            tableaudetable[indextable].CptJ += 1
 
-
-            tableaudetable[indextable].CptJ+=1
-
-            me=(str(tableaudetable[indextable].CptJ)+"  " +str(len(tableaudetable[indextable].lst_table))+"\n")
+            me = (str(tableaudetable[indextable].CptJ) + "  " + str(len(tableaudetable[indextable].lst_table)) + "\n")
             writer.write(me.encode())
 
             while tableaudetable[indextable].CptJ != len(tableaudetable[indextable].lst_table):
                 await asyncio.sleep(1)
 
             # retourScore = croupier(carte_off, Nombre_As, reader, writer)
-
 
             s = "Votre somme total : " + str(tableaudetable[indextable].getScore()) + "\n"
             writer.write(s.encode())
