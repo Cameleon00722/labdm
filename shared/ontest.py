@@ -200,7 +200,7 @@ def gen_carte(carte_off, point, n_as, reader, writer):
     return a
 
 
-def croupier(carte_off, n_as, reader, writer):
+async def croupier(carte_off, n_as, reader, writer):
     pts_Croupier = 0
 
     while pts_Croupier < 17:
