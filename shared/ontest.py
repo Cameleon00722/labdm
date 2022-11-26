@@ -210,7 +210,6 @@ async def leave(joueur, writer, i):
         if z == joueur:
             tableaudetable[i].lst_table.remove(joueur)
     writer.write(message.encode())
-    writer.close()
 
 
 async def joueur_request(reader, writer):
@@ -270,6 +269,7 @@ async def joueur_request(reader, writer):
 
         if message == "END":
             await leave(joueur, writer, indextable)
+            partie = False
 
         if message == "MORE 1":
             mess = f"utilisateur {joueur} prend une carte."
@@ -331,6 +331,7 @@ async def joueur_request(reader, writer):
         print("tableau : ", tableaudetable[indextable].lst_table[0])
         if tableaudetable[indextable].lst_table[0] == None:
             partie = False
+            writer.close()
 
 
 
