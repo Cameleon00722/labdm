@@ -195,12 +195,77 @@ def gen_carte(carte_off, point, n_as, reader, writer):
 
     return a
 
+def gen_carte4(numero_carte, point, n_as, reader, writer):
+    if numero_carte == 1:
+        point += 2
+    if numero_carte == 2:
+        point += 3
+    if numero_carte == 3:
+        point += 4
+    if numero_carte == 4:
+        point += 5
+    if numero_carte == 5:
+        point += 6
+    if numero_carte == 6:
+        point += 7
+    if numero_carte == 7:
+        point += 8
+    if numero_carte == 8:
+        point += 9
+    if numero_carte == 9:
+        point += 10
+    if numero_carte == 10:
+        point += 10
+    if numero_carte == 11:
+        point += 10
+    if numero_carte == 12:
+        point += 10
+    if numero_carte == 13:
+        n_as += 1
+
+        if point >= 11:
+            point += 1
+        else:
+            point += 11
+
+    return point
+
+
+def gen_carte3(carte_off, point, n_as, reader, writer):
+    type_carte = random.randint(1, 4)
+    numero_carte = random.randint(1, 13)
+
+    while str(type_carte) + str(numero_carte) in carte_off:
+        type_carte = random.randint(1, 4)
+        numero_carte = random.randint(1, 13)
+
+    if type_carte == 1:
+
+        a = gen_carte4(numero_carte, point, n_as, reader, writer)
+        carte_off.append(str(type_carte) + str(numero_carte))
+
+    elif type_carte == 2:
+
+        a = gen_carte4(numero_carte, point, n_as, reader, writer)
+        carte_off.append(str(type_carte) + str(numero_carte))
+
+    elif type_carte == 3:
+
+        a = gen_carte4(numero_carte, point, n_as, reader, writer)
+        carte_off.append(str(type_carte) + str(numero_carte))
+
+    elif type_carte == 4:
+
+        a = gen_carte4(numero_carte, point, n_as, reader, writer)
+        carte_off.append(str(type_carte) + str(numero_carte))
+
+    return a
 
 async def croupier(carte_off, n_as, reader, writer):
     GainPts = 0
 
     while GainPts < 17:
-        GainPts = gen_carte(carte_off, GainPts, n_as, reader, writer)
+        GainPts = gen_carte3(carte_off, GainPts, n_as, reader, writer)
 
     return GainPts
 
@@ -334,6 +399,7 @@ async def joueur_request(reader, writer):
 
         if len(tableaudetable[indextable].lst_table) == 0:
             partie = False
+            x = tableaudetable.pop(indextable)
 
 
 
