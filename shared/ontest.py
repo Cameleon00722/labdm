@@ -205,11 +205,9 @@ def croupier(carte_off, n_as, reader, writer):
 
     while pts_Croupier < 17:
         GainPts = gen_carte(carte_off, pts_Croupier, n_as, reader, writer)
-        print( pts_Croupier)
-        pts_Croupier += GainPts
-        print(pts_Croupier)
+        pts_Croupier = GainPts
 
-    return pts_Croupier
+    return GainPts
 
 
 async def leave(joueur, writer, i):
