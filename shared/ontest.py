@@ -13,11 +13,16 @@ class table:
         # timer
         self.temps = temps
 
+        self.CptJ = 0
+
     def getTable(self):
         return self.lst_table
 
     def getTemps(self):
         return self.temps
+
+    def setCptJ(self, var):
+        self.temps = var
 
     def getNom(self):
         return self.nom
@@ -223,6 +228,7 @@ async def leave(joueur, writer, i):
 async def joueur_request(reader, writer):
     partie = False
 
+
     joueur = str(writer.get_extra_info('peername')[0])
     mess = "Bienvenue\n"
     writer.write(mess.encode())
@@ -263,6 +269,8 @@ async def joueur_request(reader, writer):
     jouer = 1
     Nombre_As = 0
 
+
+
     while partie:
 
         data = await reader.read(256)
@@ -302,26 +310,34 @@ async def joueur_request(reader, writer):
 
         if message == "MORE 0":
             mess = f"utilisateur {joueur} ne prend pas de carte."
+
             print(mess)
 
+            print(tableaudetable[indextable].CptJ, tableaudetable[indextable].lst_table)
+
+            tableaudetable[indextable].CptJ+=1
+
+
+            if tableaudetable[indextable].CptJ == len(tableaudetable[indextable].lst_table):
+
             # retourScore = croupier(carte_off, Nombre_As, reader, writer)
-            Cblack.setScore(await croupier(carte_off, Nombre_As, reader, writer))
+                Cblack.setScore(await croupier(carte_off, Nombre_As, reader, writer))
 
-            s = "Votre somme total : " + str(JBlack.getScore()) + "\n"
-            writer.write(s.encode())
-
-            s = "le croupier à " + str(Cblack.getScore()) + "\n"
-            writer.write(s.encode())
-
-            if JBlack.getScore() < Cblack.getScore() <= 21:
-                s = "le croupier gagne\n"
+                s = "Votre somme total : " + str(JBlack.getScore()) + "\n"
                 writer.write(s.encode())
-                partie = leave(joueur, writer, indextable)
 
-            else:
-                s = "le joueur gagne\n"
+                s = "le croupier à " + str(Cblack.getScore()) + "\n"
                 writer.write(s.encode())
-                partie = leave(joueur, writer, indextable)
+
+                if JBlack.getScore() < Cblack.getScore() <= 21:
+                    s = "le croupier gagne\n"
+                    writer.write(s.encode())
+                    partie = leave(joueur, writer, indextable)
+
+                else:
+                    s = "le joueur gagne\n"
+                    writer.write(s.encode())
+                    partie = leave(joueur, writer, indextable)
 
         # await forward(writer, addr, message)
 
