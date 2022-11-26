@@ -202,7 +202,7 @@ async def croupier(carte_off, n_as, reader, writer):
     return GainPts
 
 
-async def leave(joueur, writer, i):
+def leave(joueur, writer, i):
     message = "END"
     mess = f"User {joueur} leave the server2."
     print(mess)
